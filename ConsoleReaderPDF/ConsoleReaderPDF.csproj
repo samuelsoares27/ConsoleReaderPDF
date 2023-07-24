@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="IronXL.Excel" Version="2023.7.4" />
     <PackageReference Include="iTextSharp" Version="5.5.13.3" />
   </ItemGroup>
 
