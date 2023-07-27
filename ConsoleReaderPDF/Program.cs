@@ -42,7 +42,7 @@ foreach (string arq in arquivos)
     var sheetHabitese = workbookHabitese.CreateWorkSheet("HABITE-SE");
 
     sheetHabitese["A1"].Value = "NOME ARQUIVO";
-    sheetHabitese["B1"].Value = "TITULO";
+    sheetHabitese["B1"].Value = "TÍTULO";
     sheetHabitese["C1"].Value = "ENDEREÇO DA OBRA";
     sheetHabitese["D1"].Value = "BAIRRO";
     sheetHabitese["E1"].Value = "CIDADE";
@@ -52,12 +52,12 @@ foreach (string arq in arquivos)
     sheetHabitese["I1"].Value = "RESPONSÁVEL PELA EXECUÇÃO DA OBRA (CPF/CNPJ)";
     sheetHabitese["J1"].Value = "RESPONSÁVEL TÉCNICO";
     sheetHabitese["K1"].Value = "DESCRICAO TERRENO";
-    sheetHabitese["L1"].Value = "ESPECIFICAÇÃO (CATEGORIA)";
-    sheetHabitese["M1"].Value = "ÁREA (CATEGORIA)(DESTINACAO)/(TIPO DE OBRA)/(m²))";
+    sheetHabitese["L1"].Value = "TIPO DE HABITE-SE";
+    sheetHabitese["M1"].Value = "ÁREA (CATEGORIA) / (DESTINAÇÃO) / (TIPO DE OBRA) / (M²))";
     sheetHabitese["N1"].Value = "ÁREA RESULTANTE";
     sheetHabitese["O1"].Value = "ÁREA LIBERADA";
     sheetHabitese["P1"].Value = "AREA TOTAL";
-    sheetHabitese["Q1"].Value = "OBSERVACAO";
+    sheetHabitese["Q1"].Value = "OBSERVAÇÃO";
 
 
     var linha = 2;
@@ -65,7 +65,18 @@ foreach (string arq in arquivos)
     foreach (var row in listaHabitese)
     {
         sheetHabitese[$"A{linha}"].Value = $"{row.Nome}";
-        sheetHabitese[$"B{linha}"].Value = $"HABITE-SE {row.Texto.Substring(row.Texto.IndexOf("Nº"), row.Texto.IndexOf("ENDEREÇO") - row.Texto.IndexOf("Nº"))}".Replace("\n", " ");
+
+        var habiteseIndex = -1;
+        if (row.Texto.IndexOf("Nº", row.Texto.IndexOf("Nº") + 1) > row.Texto.IndexOf("ENDEREÇO"))
+        {
+            habiteseIndex = row.Texto.IndexOf("Nº");
+        }
+        else
+        {
+            habiteseIndex = row.Texto.IndexOf("Nº", row.Texto.IndexOf("Nº") + 1);
+        }
+
+        sheetHabitese[$"B{linha}"].Value = $"{row.Texto.Substring(habiteseIndex, row.Texto.IndexOf("ENDEREÇO") - habiteseIndex)}".Replace("\n", " ").Replace("Nº", "");
         sheetHabitese[$"C{linha}"].Value = $"{row.Texto.Substring(row.Texto.IndexOf("ENDEREÇO DA OBRA:"), row.Texto.IndexOf("BAIRRO:") - row.Texto.IndexOf("ENDEREÇO DA OBRA:"))}".Replace("ENDEREÇO DA OBRA:", "").Replace("\n", " ");
         sheetHabitese[$"D{linha}"].Value = $"{row.Texto.Substring(row.Texto.IndexOf("BAIRRO:"), row.Texto.IndexOf("CIDADE:") - row.Texto.IndexOf("BAIRRO:"))}".Replace("BAIRRO:", "").Replace("\n", " ");
         sheetHabitese[$"E{linha}"].Value = $"{row.Texto.Substring(row.Texto.IndexOf("CIDADE:"), row.Texto.IndexOf("PROPRIETÁRIO DO IMÓVEL:") - row.Texto.IndexOf("CIDADE:"))}".Replace("CIDADE:", "").Replace("\n", " ");
@@ -125,7 +136,7 @@ foreach (string arq in arquivos)
     var sheetAlvaraTabela = workbookAlvaraTabela.CreateWorkSheet("ALVARA");
 
     sheetAlvaraTabela["A1"].Value = "NOME ARQUIVO";
-    sheetAlvaraTabela["B1"].Value = "TITULO";
+    sheetAlvaraTabela["B1"].Value = "TÍTULO";
     sheetAlvaraTabela["C1"].Value = "PROPRIETÁRIO (NOME)";
     sheetAlvaraTabela["D1"].Value = "PROPRIETÁRIO DO IMÓVEL (CPF/CNPJ)";
     sheetAlvaraTabela["E1"].Value = "AUTOR PROJETO (NOME)";
@@ -134,13 +145,11 @@ foreach (string arq in arquivos)
     sheetAlvaraTabela["H1"].Value = "RESPONSÁVEL TÉCNICO (CREA)";
     sheetAlvaraTabela["I1"].Value = "CONSTRUTORA OU RESPONSÁVEL PELA EXECUÇÃO DA OBRA (NOME)";
     sheetAlvaraTabela["J1"].Value = "CONSTRUTORA OU RESPONSÁVEL PELA EXECUÇÃO DA OBRA (CPF/CNPJ)";
-    sheetAlvaraTabela["K1"].Value = "DESCRICAO";
-
-    sheetAlvaraTabela["L1"].Value = "AREAS PRINCIPAIS";
-   
+    sheetAlvaraTabela["K1"].Value = "DESCRIÇÃO";
+    sheetAlvaraTabela["L1"].Value = "AREAS PRINCIPAIS";  
     sheetAlvaraTabela["N1"].Value = "ÁREA RESULTANTE";
     sheetAlvaraTabela["M1"].Value = "ÁREA LIBERADA";
-    sheetAlvaraTabela["O1"].Value = "OBSERVACAO";
+    sheetAlvaraTabela["O1"].Value = "OBSERVAÇÃO";
     sheetAlvaraTabela["P1"].Value = "LEI";
 
     linha = 2;
@@ -148,7 +157,7 @@ foreach (string arq in arquivos)
     foreach (var row in listaAlvaraTabela)
     {
         sheetAlvaraTabela[$"A{linha}"].Value = $"{row.Nome}";
-        sheetAlvaraTabela[$"B{linha}"].Value = $"{row.Texto.Substring(row.Texto.IndexOf("ALVARÁ DE CONSTRUÇÃO Nº"), row.Texto.IndexOf("PROPRIETÁRIO:") - row.Texto.IndexOf("ALVARÁ DE CONSTRUÇÃO Nº"))}".Replace("\n", " ");
+        sheetAlvaraTabela[$"B{linha}"].Value = $"{row.Texto.Substring(row.Texto.IndexOf("ALVARÁ DE CONSTRUÇÃO Nº"), row.Texto.IndexOf("PROPRIETÁRIO:") - row.Texto.IndexOf("ALVARÁ DE CONSTRUÇÃO Nº"))}".Replace("ALVARÁ DE CONSTRUÇÃO Nº", "").Replace("\n", " ");
 
         var Proprietario = $"{row.Texto.Substring(row.Texto.IndexOf("PROPRIETÁRIO:"), row.Texto.IndexOf("AUTOR DO PROJETO:") - row.Texto.IndexOf("PROPRIETÁRIO:"))}";
         sheetAlvaraTabela[$"C{linha}"].Value = $"{Proprietario.Substring(Proprietario.IndexOf("NOME:"), Proprietario.IndexOf("CPF/CNPJ:") - Proprietario.IndexOf("NOME:"))}".Replace("NOME:", "").Replace("\n", " ");
@@ -230,7 +239,7 @@ foreach (string arq in arquivos)
         sheetAlvaraBarra[$"A{linha}"].Value = $"{row.Nome}";
 
         if(row.Texto == "") {
-            sheetAlvaraBarra[$"B{linha}"].Value = $"PDF VAZIO";
+            sheetAlvaraBarra[$"B{linha}"].Value = $"PDF COM PROBLEMA";
 
         }else{
             sheetAlvaraBarra[$"B{linha}"].Value = $"{row.Texto.Substring(row.Texto.IndexOf("ALVARÁ DE CONSTRUÇÃO Nº"), row.Texto.IndexOf("PROPRIETÁRIO") - row.Texto.IndexOf("ALVARÁ DE CONSTRUÇÃO Nº"))}".Replace("\n", " ");
