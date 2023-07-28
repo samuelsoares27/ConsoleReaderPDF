@@ -29,8 +29,8 @@ foreach (string arq in arquivos)
 }
 
 #endregion
-/*try
-{*/
+try
+{
 
     var listaHabitese = list.Where(tipo => tipo.Texto.Contains("ENDEREÇO DA OBRA:")).ToList();
     var listaAlvaraTabela = list.Where(tipo => tipo.Texto.Contains("CONSTRUTORA OU RESPONSÁVEL PELA EXECUÇÃO DA OBRA:") && tipo.Texto.Contains("ÁREAS PRINCIPAIS")).ToList();
@@ -61,7 +61,7 @@ foreach (string arq in arquivos)
 
 
     var linha = 2;
-    
+
     foreach (var row in listaHabitese)
     {
         sheetHabitese[$"A{linha}"].Value = $"{row.Nome}";
@@ -117,9 +117,9 @@ foreach (string arq in arquivos)
 
         var areaPrincipais = $"{row.Texto.Substring(row.Texto.IndexOf("ÁREAS PRINCIPAIS"), row.Texto.IndexOf("ÁREA TOTAL DA OBRA:") - row.Texto.IndexOf("ÁREAS PRINCIPAIS"))}".Replace("\n", " ");
         sheetHabitese[$"M{linha}"].Value = $"{areaPrincipais.Substring(areaPrincipais.IndexOf("TIPO DE OBRA ÁREA (M²)"), areaPrincipais.IndexOf("ÁREA RESULTANTE") - areaPrincipais.IndexOf("TIPO DE OBRA ÁREA (M²)"))}".Replace("TIPO DE OBRA ÁREA (M²)", "").Replace("\n", " ");
-        sheetHabitese[$"N{linha}"].Value = $"{areaPrincipais.Substring(areaPrincipais.IndexOf("ÁREA RESULTANTE"), areaPrincipais.IndexOf("ÁREA LIBERADA") - areaPrincipais.IndexOf("ÁREA RESULTANTE"))}".Replace("ÁREA RESULTANTE", "").Replace("\n", " ");        
+        sheetHabitese[$"N{linha}"].Value = $"{areaPrincipais.Substring(areaPrincipais.IndexOf("ÁREA RESULTANTE"), areaPrincipais.IndexOf("ÁREA LIBERADA") - areaPrincipais.IndexOf("ÁREA RESULTANTE"))}".Replace("ÁREA RESULTANTE", "").Replace("\n", " ");
         sheetHabitese[$"O{linha}"].Value = $"{areaPrincipais.Substring(areaPrincipais.IndexOf("ÁREA LIBERADA"), areaPrincipais.Length - areaPrincipais.IndexOf("ÁREA LIBERADA"))}".Replace("ÁREA LIBERADA", "").Replace("\n", " ");
-        
+
         sheetHabitese[$"P{linha}"].Value = $"{row.Texto.Substring(row.Texto.IndexOf("ÁREA TOTAL DA OBRA:"), row.Texto.IndexOf("OBSERVAÇÃO:") - row.Texto.IndexOf("ÁREA TOTAL DA OBRA:"))}".Replace("ÁREA TOTAL DA OBRA:", "").Replace("\n", " ");
         sheetHabitese[$"Q{linha}"].Value = $"{row.Texto.Substring(row.Texto.IndexOf("OBSERVAÇÃO:"), row.Texto.IndexOf("MG, EM") - row.Texto.IndexOf("OBSERVAÇÃO:"))}".Replace("OBSERVAÇÃO:", "").Replace("\n", " ");
         linha++;
@@ -146,7 +146,7 @@ foreach (string arq in arquivos)
     sheetAlvaraTabela["I1"].Value = "CONSTRUTORA OU RESPONSÁVEL PELA EXECUÇÃO DA OBRA (NOME)";
     sheetAlvaraTabela["J1"].Value = "CONSTRUTORA OU RESPONSÁVEL PELA EXECUÇÃO DA OBRA (CPF/CNPJ)";
     sheetAlvaraTabela["K1"].Value = "DESCRIÇÃO";
-    sheetAlvaraTabela["L1"].Value = "AREAS PRINCIPAIS";  
+    sheetAlvaraTabela["L1"].Value = "AREAS PRINCIPAIS";
     sheetAlvaraTabela["N1"].Value = "ÁREA RESULTANTE";
     sheetAlvaraTabela["M1"].Value = "ÁREA LIBERADA";
     sheetAlvaraTabela["O1"].Value = "OBSERVAÇÃO";
@@ -181,7 +181,8 @@ foreach (string arq in arquivos)
         if (row.Texto.IndexOf("ESPECIFICAÇÃO") != -1)
         {
             especificacaoIndice = row.Texto.IndexOf("ESPECIFICAÇÃO");
-        }else if (row.Texto.IndexOf("E SPECIFICAÇÃO") != -1)
+        }
+        else if (row.Texto.IndexOf("E SPECIFICAÇÃO") != -1)
         {
             especificacaoIndice = row.Texto.IndexOf("E SPECIFICAÇÃO");
         }
@@ -189,24 +190,26 @@ foreach (string arq in arquivos)
         var especificacoes = $"{row.Texto.Substring(row.Texto.IndexOf("ÁREAS PRINCIPAIS"), especificacaoIndice - row.Texto.IndexOf("ÁREAS PRINCIPAIS"))}".Replace("\n", " ");
 
         sheetAlvaraTabela[$"L{linha}"].Value = $"{especificacoes.Substring(especificacoes.IndexOf("TIPO DE OBRA ÁREA (M²)"), especificacoes.IndexOf("ÁREA RESULTANTE") - especificacoes.IndexOf("TIPO DE OBRA ÁREA (M²)"))}".Replace("TIPO DE OBRA ÁREA (M²)", "").Replace("\n", " ");
-        
+
         sheetAlvaraTabela[$"M{linha}"].Value = $"{especificacoes.Substring(especificacoes.IndexOf("ÁREA RESULTANTE"), especificacoes.IndexOf("ÁREA LIBERADA") - especificacoes.IndexOf("ÁREA RESULTANTE"))}".Replace("ÁREA RESULTANTE", "").Replace("\n", " ");
         sheetAlvaraTabela[$"N{linha}"].Value = $"{especificacoes.Substring(especificacoes.IndexOf("ÁREA LIBERADA"), especificacoes.Length - especificacoes.IndexOf("ÁREA LIBERADA"))}".Replace("ÁREA LIBERADA", "").Replace("\n", " ");
 
         sheetAlvaraTabela[$"O{linha}"].Value = $"{row.Texto.Substring(especificacaoIndice, row.Texto.IndexOf("OBSERVAÇÕES:") - especificacaoIndice)}".Replace("ESPECIFICAÇÃO:", "").Replace("ESPECIFICAÇÃO:", "").Replace("\n", " ");
 
         var leiIndex = -1;
-        if(row.Texto.IndexOf("OBSERVAÇÕES:") > row.Texto.IndexOf("LEI Nº"))
+        if (row.Texto.IndexOf("OBSERVAÇÕES:") > row.Texto.IndexOf("LEI Nº"))
         {
             leiIndex = row.Texto.IndexOf("LEI Nº", row.Texto.IndexOf("LEI Nº") + 1);
-        }else{
+        }
+        else
+        {
             leiIndex = row.Texto.IndexOf("LEI Nº");
         }
-    
+
         sheetAlvaraTabela[$"P{linha}"].Value = $"{row.Texto.Substring(row.Texto.IndexOf("OBSERVAÇÕES:"), leiIndex - row.Texto.IndexOf("OBSERVAÇÕES:"))}".Replace("OBSERVAÇÕES:", "").Replace("\n", " ");
         linha++;
     }
-                               
+
     workbookAlvaraTabela.SaveAs($"{path}\\resultado\\ExcelAlvaraComTabela.xlsx");
 
     #endregion
@@ -233,15 +236,18 @@ foreach (string arq in arquivos)
     sheetAlvaraBarra["N1"].Value = "LEI";
 
     linha = 2;
-    
+
     foreach (var row in listaAlvaraComBarra)
     {
         sheetAlvaraBarra[$"A{linha}"].Value = $"{row.Nome}";
 
-        if(row.Texto == "") {
+        if (row.Texto == "")
+        {
             sheetAlvaraBarra[$"B{linha}"].Value = $"PDF COM PROBLEMA";
 
-        }else{
+        }
+        else
+        {
             sheetAlvaraBarra[$"B{linha}"].Value = $"{row.Texto.Substring(row.Texto.IndexOf("ALVARÁ DE CONSTRUÇÃO Nº"), row.Texto.IndexOf("PROPRIETÁRIO") - row.Texto.IndexOf("ALVARÁ DE CONSTRUÇÃO Nº"))}".Replace("\n", " ");
 
             var Proprietario = $"{row.Texto.Substring(row.Texto.IndexOf("PROPRIETÁRIO"), row.Texto.IndexOf("AUTOR DO PROJETO:") - row.Texto.IndexOf("PROPRIETÁRIO"))}";
@@ -253,7 +259,7 @@ foreach (string arq in arquivos)
             sheetAlvaraBarra[$"F{linha}"].Value = $"{AutorProjeto.Substring(AutorProjeto.IndexOf("CREA (CAU) Nº:"), AutorProjeto.Length - AutorProjeto.IndexOf("CREA (CAU) Nº:"))}".Replace("CREA (CAU) Nº:", "").Replace("\n", " ");
 
             var ResponsavelTecnico = $"{row.Texto.Substring(row.Texto.IndexOf("RESPONSÁVEL TÉCNICO:"), row.Texto.IndexOf("CONSTRUTORA OU RESPONSÁVEL PELA EXECUÇÃO DA OBRA:") - row.Texto.IndexOf("RESPONSÁVEL TÉCNICO:"))}";
-        
+
             if (ResponsavelTecnico.IndexOf("CREA (CAU) Nº:") != -1)
             {
                 sheetAlvaraBarra[$"G{linha}"].Value = $"{ResponsavelTecnico.Substring(ResponsavelTecnico.IndexOf("NOME:"), ResponsavelTecnico.IndexOf("CREA (CAU) Nº:") - ResponsavelTecnico.IndexOf("NOME:"))}".Replace("NOME:", "").Replace("\n", " ");
@@ -266,7 +272,7 @@ foreach (string arq in arquivos)
             }
 
             var ConstrutoriaExecucao = $"{row.Texto.Substring(row.Texto.IndexOf("CONSTRUTORA OU RESPONSÁVEL PELA EXECUÇÃO DA OBRA:"), row.Texto.IndexOf("TENDO EM") - row.Texto.IndexOf("RESPONSÁVEL TÉCNICO:"))}";
-        
+
             if (ConstrutoriaExecucao.IndexOf("CREA (CAU) Nº:") != -1)
             {
                 sheetAlvaraBarra[$"I{linha}"].Value = $"{ConstrutoriaExecucao.Substring(ConstrutoriaExecucao.IndexOf("NOME:"), ConstrutoriaExecucao.IndexOf("CREA (CAU) Nº:") - ConstrutoriaExecucao.IndexOf("NOME:"))}".Replace("NOME:", "").Replace("\n", " ");
@@ -292,7 +298,7 @@ foreach (string arq in arquivos)
 
             var especificacoes = $"{row.Texto.Substring(especificacaoIndice, row.Texto.IndexOf("OBSERVAÇÕES:") - especificacaoIndice)}".Replace("\n", " ");
 
-            sheetAlvaraBarra[$"L{linha}"].Value = $"{especificacoes.Substring(0, especificacoes.Length - 0)}".Replace("\n", " ");        
+            sheetAlvaraBarra[$"L{linha}"].Value = $"{especificacoes.Substring(0, especificacoes.Length - 0)}".Replace("\n", " ");
             //sheetAlvaraBarra[$"M{linha}"].Value = $"{especificacoes.Substring(especificacoes.IndexOf("ÁREA RESULTANTE"), especificacoes.IndexOf("ÁREA LIBERADA") - especificacoes.IndexOf("ÁREA RESULTANTE"))}".Replace("ÁREA RESULTANTE", "").Replace("\n", " ");        
             //sheetAlvaraBarra[$"M{linha}"].Value = $"{especificacoes.Substring(especificacoes.IndexOf("AREA TOTAL DA OBRA"), especificacoes.Length - especificacoes.IndexOf("AREA TOTAL DA OBRA"))}".Replace("AREA TOTAL DA OBRA", "").Replace("\n", " ");
 
@@ -305,13 +311,12 @@ foreach (string arq in arquivos)
     workbookAlvara.SaveAs($"{path}\\resultado\\ExcelAlvaraComBarra.xlsx");
 
     #endregion
-
-/*}
+}
 catch (Exception e)
 {
     System.Console.WriteLine("ERRO:" + e.Message);
     throw;
-}*/
+}
 
 
 
